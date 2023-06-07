@@ -123,8 +123,12 @@ sampleClutch <- makeClutch(basePop, clutchSize = 100, percentSire1 <- .8)
 #Sampling function, which takes a certain number of random offspring 
 #from a dataframe of offspring genotypes
 takeSample <- function(ClutchGeno, sampNum){
-  return(ClutchGeno[,sample(ncol(ClutchGeno), sampNum)])
+  return(ClutchGeno[sample(nrow(ClutchGeno), sampNum),])
 }
+
+#example
+samp <- takeSample(sampleClutch, 3)
+dim(samp)
 
 #CSD locus function taken directly from SIMply Bee
 
