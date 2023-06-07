@@ -108,12 +108,12 @@ makeClutch <- function(basePop, clutchSize, percentSire1){
   if(totalClutch != clutchSize){
     sire1Brood <- sire1Brood + (clutchSize - totalClutch)
   }
-  ClutchGeno <- pullSegSiteGeno(makeCross(pop = basePop, crossPlan = matrix(c(1, 2), ncol = 2), nProgeny = sire1Brood))
+  Clutch <- makeCross(pop = basePop, crossPlan = matrix(c(1, 2), ncol = 2), nProgeny = sire1Brood)
   for(i in 3:(numSires+1)){
-    altcross <- pullSegSiteGeno(makeCross(pop = basePop, crossPlan = matrix(c(1, i), ncol = 2), nProgeny = altSireBrood))
-    ClutchGeno <- rbind(ClutchGeno, altcross)
+    altcross <- makeCross(pop = basePop, crossPlan = matrix(c(1, i), ncol = 2), nProgeny = altSireBrood)
+    Clutch <- mergePops(list(Clutch,altcross))
   }
-  return(ClutchGeno)
+  return(Clutch)
 }
 
 #example
@@ -121,14 +121,18 @@ sampleClutch <- makeClutch(basePop, clutchSize = 100, percentSire1 <- .8)
 
 
 #Sampling function, which takes a certain number of random offspring 
-#from a dataframe of offspring genotypes
-takeSample <- function(ClutchGeno, sampNum){
-  return(ClutchGeno[sample(nrow(ClutchGeno), sampNum),])
+#from a population object of offspring
+takeSample <- function(Clutch, sampNum){
+  Samp <- attrition(Clutch, 1 - (sampNum / nInd(sampleClutch)))
+  while(nInd(Samp) != sampNum){
+    Samp <- attrition(Clutch, 1 - (sampNum / nInd(sampleClutch)))
+  }
+  return(Samp)
 }
 
 #example
-samp <- takeSample(sampleClutch, 3)
-dim(samp)
+samp <- takeSample(sampleClutch, 15)
+samp
 
 #CSD locus function taken directly from SIMply Bee
 
