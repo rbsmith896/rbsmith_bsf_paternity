@@ -7,7 +7,18 @@ library(AlphaSimR)
 
 rm(list = ls())
 
-#Example making a population (with SNPs) and simulating some crosses
+#This first part creates a base population (with SNPs) and simulates
+#some example clutches manually. After, there are some generalized functions
+#to do this automatically with set parameters
+
+#Once multi-allelic microsatellites are encoded, relationships can be 
+#estimated using the pairwise relatedness coefficient r_xy, where r_xy = 2*theta_xy,
+#and theta_xy is the probability that the two individuals have the same allele 
+#at a given locus
+
+#With known allele frequencies, we can simulate genotypes of full sibs, half sibs,
+#and unrelated pairs to get distributions of r_xy for each pairing, and then 
+#calculate the error rates that full-sibs are mis-classified as half-sibs and vice versa
 
 founderGenomes = runMacs(nInd = 4, nChr = 7, segSites = 1000)
 SP = SimParam$new(founderGenomes)
@@ -104,6 +115,9 @@ makeClutch <- function(basePop, clutchSize, percentSire1){
   }
   return(ClutchGeno)
 }
+
+#example
+sampleClutch <- makeClutch(basePop, clutchSize = 100, percentSire1 <- .8)
 
 
 #Sampling function, which takes a certain number of random offspring 
